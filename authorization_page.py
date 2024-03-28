@@ -1,9 +1,10 @@
+import time
+from pathlib import Path
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-import time
-from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
 
@@ -12,9 +13,9 @@ WEBDRIVER_PATH = BASE_DIR / "chromedriver/chromedriver"
 URL = "https://zoomarket.kz/auth/registration/?register=yes&backurl=%2Fauth%2F"
 
 
-class AuthorizationPage():
+class AuthorizationPage:
 
-    def __init__(self, WEBDRIVER_PATH: str, URL: str):
+    def __init__(self, WEBDRIVER_PATH: Path, URL: str):
         self._url = URL
         service = Service(executable_path=WEBDRIVER_PATH)
         self._driver = webdriver.Chrome(service=service)
@@ -28,7 +29,9 @@ class AuthorizationPage():
     def get_username_error_message(self, name):
         self.input_name(name=name)
         time.sleep(3)
-        user_name_error_message = self._driver.find_element(By.ID, "input_NAME-error").text
+        user_name_error_message = self._driver.find_element(
+            By.ID, "input_NAME-error"
+        ).text
         self._driver.find_element(By.ID, "input_NAME").clear()
         return user_name_error_message
 
@@ -37,23 +40,24 @@ class AuthorizationPage():
         user_email.send_keys(email)
         user_email.send_keys(Keys.ENTER)
 
-    def get_email_error_message(self, email):
+    def get_email_error_message(self, email) -> str:
         self.input_email(email=email)
         time.sleep(5)
         email_error_message = self._driver.find_element(By.ID, "input_EMAIL-error").text
         self._driver.find_element(By.ID, "input_EMAIL").clear()
         return email_error_message
 
-
     def input_phone_number(self, phone_number):
         phone = self._driver.find_element(By.ID, "input_PERSONAL_PHONE")
         phone.send_keys(phone_number)
         phone.send_keys(Keys.ENTER)
 
-    def get_phone_number_error_message(self,phone_number):
+    def get_phone_number_error_message(self, phone_number) -> str:
         self.input_phone_number(phone_number=phone_number)
         time.sleep(3)
-        error_number_phone = self._driver.find_element(By.ID, "input_PERSONAL_PHONE-error").text
+        error_number_phone = self._driver.find_element(
+            By.ID, "input_PERSONAL_PHONE-error"
+        ).text
         self._driver.find_element(By.ID, "input_PERSONAL_PHONE").clear()
         return error_number_phone
 
@@ -62,10 +66,12 @@ class AuthorizationPage():
         user_password.send_keys(password)
         user_password.send_keys(Keys.ENTER)
 
-    def get_password_error_message(self, password):
+    def get_password_error_message(self, password) -> str:
         self.input_password(password=password)
         time.sleep(3)
-        error_password_message = self._driver.find_element(By.ID, "input_PASSWORD-error").text
+        error_password_message = self._driver.find_element(
+            By.ID, "input_PASSWORD-error"
+        ).text
         self._driver.find_element(By.ID, "input_PASSWORD").clear()
         return error_password_message
 
@@ -74,15 +80,18 @@ class AuthorizationPage():
         repeat_password_el.send_keys(repeat_password)
         repeat_password_el.send_keys(Keys.ENTER)
 
-    def get_repeat_password_error_message(self, repeat_password):
+    def get_repeat_password_error_message(self, repeat_password) -> str:
         self.input_repeat_password(repeat_password=repeat_password)
         time.sleep(3)
-        error_repeat_password_message = self._driver.find_element(By.ID, "input_CONFIRM_PASSWORD-error").text
+        error_repeat_password_message = self._driver.find_element(
+            By.ID, "input_CONFIRM_PASSWORD-error"
+        ).text
         self._driver.find_element(By.ID, "input_CONFIRM_PASSWORD").clear()
         return error_repeat_password_message
 
     def driver_quit(self):
         self._driver.quit()
 
+
 AUTH_PAGE = AuthorizationPage(WEBDRIVER_PATH=WEBDRIVER_PATH, URL=URL)
-#AuthorizationPage(WEBDRIVER_PATH=WEBDRIVER_PATH, URL=URL).driver_quit()
+# AuthorizationPage(WEBDRIVER_PATH=WEBDRIVER_PATH, URL=URL).driver_quit()
